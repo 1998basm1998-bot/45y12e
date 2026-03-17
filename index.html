@@ -30,6 +30,13 @@
                 <li data-target="reports">التقارير</li>
                 <li data-target="statistics">الإحصائيات</li>
                 <li data-target="notifications">الإشعارات</li>
+                
+                <li data-target="attendance">الحضور والغياب</li>
+                <li data-target="exams">الامتحانات والدرجات</li>
+                <li data-target="schedule">الجدول الدراسي</li>
+                <li data-target="library">المكتبة والملفات</li>
+                <li data-target="messages">الرسائل والتواصل</li>
+                
                 <li data-target="settings">الإعدادات</li>
             </ul>
         </aside>
@@ -51,7 +58,7 @@
             <div class="pages-container">
                 
                 <section id="dashboard" class="page active">
-                    <h2 class="page-title">نظرة عامة</h2>
+                    <h2 class="page-title">نظرة عامة والإحصائيات</h2>
                     <div class="stats-grid" id="dashboardStats"></div>
                 </section>
 
@@ -76,7 +83,7 @@
                 <section id="registration" class="page">
                     <div class="page-header">
                         <h2 class="page-title">التسجيل والقبول</h2>
-                        <button class="btn-primary" onclick="openModal('registerModal')">📝 تسجيل جديد</button>
+                        <button class="btn-primary" onclick="openGenericModal('تسجيل جديد')">📝 تسجيل جديد</button>
                     </div>
                     <div class="table-container">
                         <table class="modern-table">
@@ -84,6 +91,143 @@
                                 <tr><th>الاسم</th><th>المرحلة</th><th>تاريخ التسجيل</th><th>الحالة</th><th>الإجراءات</th></tr>
                             </thead>
                             <tbody id="registrationTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="attendance" class="page">
+                    <div class="page-header">
+                        <div>
+                            <h2 class="page-title">الحضور والغياب</h2>
+                            <p style="color: var(--text-muted);">متابعة حضور وغياب الطلاب، المدرسين، والموظفين</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-primary" onclick="openGenericModal('تسجيل حضور الطلاب')">تسجيل حضور</button>
+                            <button class="btn-secondary" onclick="openGenericModal('حضور المدرسين')">حضور المدرسين</button>
+                            <button class="btn-secondary" onclick="openGenericModal('دوام الموظفين')">دوام الموظفين</button>
+                            <button class="btn-secondary" onclick="openGenericModal('تقرير الغياب')">تقرير الغياب</button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="card-front"><h3>نسبة الحضور اليوم</h3><div class="card-value">92%</div></div>
+                        <div class="card-front"><h3>الغيابات اليوم</h3><div class="card-value" style="color: var(--primary-red);">15</div></div>
+                        <div class="card-front"><h3>الطلاب كثيري الغياب</h3><div class="card-value">8</div><button class="btn-details" style="margin-top:10px;" onclick="alert('عرض التفاصيل والتنبيهات')">تنبيهات الغياب</button></div>
+                    </div>
+
+                    <div class="table-container" style="margin-top: 20px;">
+                        <h3>سجل الحضور اليومي</h3>
+                        <table class="modern-table">
+                            <thead><tr><th>الاسم</th><th>النوع</th><th>الدورة/القسم</th><th>الوقت</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                            <tbody id="attendanceTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="exams" class="page">
+                    <div class="page-header">
+                        <div>
+                            <h2 class="page-title">الامتحانات والدرجات</h2>
+                            <p style="color: var(--text-muted);">إدارة الامتحانات، إدخال الدرجات، والنتائج</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-primary" onclick="openGenericModal('إضافة امتحان')">إضافة امتحان</button>
+                            <button class="btn-secondary" onclick="openGenericModal('إدخال درجات')">إدخال درجات</button>
+                            <button class="btn-secondary" onclick="alert('عرض النتائج')">عرض النتائج</button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="card-front"><h3>متوسط الدرجات</h3><div class="card-value">85%</div></div>
+                        <div class="card-front"><h3>أعلى درجة</h3><div class="card-value" style="color: var(--gold);">99</div></div>
+                        <div class="card-front"><h3>نسبة النجاح العامة</h3><div class="card-value" style="color: #166534;">94%</div></div>
+                    </div>
+
+                    <div class="table-container" style="margin-top: 20px;">
+                        <h3>آخر النتائج المدخلة</h3>
+                        <table class="modern-table">
+                            <thead><tr><th>الطالب</th><th>المادة</th><th>الامتحان</th><th>الدرجة</th><th>التقدير</th><th>الإجراءات</th></tr></thead>
+                            <tbody id="examsTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="schedule" class="page">
+                    <div class="page-header">
+                        <div>
+                            <h2 class="page-title">الجدول الدراسي</h2>
+                            <p style="color: var(--text-muted);">تنظيم المحاضرات، القاعات، وأوقات المدرسين</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-primary" onclick="openGenericModal('إضافة جدول')">إضافة جدول</button>
+                            <button class="btn-secondary" onclick="openGenericModal('إدارة القاعات')">إدارة القاعات</button>
+                            <button class="btn-secondary" onclick="window.print()">طباعة الجدول</button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="card-front"><h3>القاعات المشغولة</h3><div class="card-value">12/15</div></div>
+                        <div class="card-front" style="border: 1px solid var(--primary-red);"><h3>تعارض المواعيد</h3><div class="card-value" style="color: var(--primary-red);">0</div><p>لا يوجد تعارض حالياً</p></div>
+                    </div>
+
+                    <div class="table-container" style="margin-top: 20px;">
+                        <h3>الجدول الأسبوعي</h3>
+                        <table class="modern-table">
+                            <thead><tr><th>اليوم</th><th>الوقت</th><th>المادة</th><th>المدرس</th><th>القاعة</th><th>الإجراءات</th></tr></thead>
+                            <tbody id="scheduleTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="library" class="page">
+                    <div class="page-header">
+                        <div>
+                            <h2 class="page-title">المكتبة والملفات</h2>
+                            <p style="color: var(--text-muted);">إدارة الملازم، الكتب، والوسائط التعليمية</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-primary" onclick="openGenericModal('رفع ملف')">رفع ملف 📤</button>
+                            <button class="btn-secondary" onclick="alert('تصنيف الملفات')">تصنيف</button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="card-front"><h3>إجمالي الملفات</h3><div class="card-value">340</div></div>
+                        <div class="card-front"><h3>الأكثر تنزيلاً</h3><div class="card-value">ملزمة الرياضيات</div></div>
+                    </div>
+
+                    <div class="table-container" style="margin-top: 20px;">
+                        <h3>مكتبة المواد</h3>
+                        <table class="modern-table">
+                            <thead><tr><th>اسم الملف</th><th>المادة</th><th>النوع</th><th>الحجم</th><th>تاريخ الرفع</th><th>الإجراءات</th></tr></thead>
+                            <tbody id="libraryTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="messages" class="page">
+                    <div class="page-header">
+                        <div>
+                            <h2 class="page-title">الرسائل والتواصل</h2>
+                            <p style="color: var(--text-muted);">إدارة رسائل الطلاب، أولياء الأمور، والمجموعات</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-primary" onclick="openGenericModal('إرسال رسالة فردية')">إرسال رسالة</button>
+                            <button class="btn-secondary" onclick="openGenericModal('إرسال جماعي')">إرسال جماعي</button>
+                            <button class="btn-secondary" onclick="alert('عرض القوالب الجاهزة')">قوالب جاهزة</button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="card-front"><h3>الرسائل غير المقروءة</h3><div class="card-value" style="color: var(--gold);">5</div></div>
+                        <div class="card-front"><h3>تم الإرسال اليوم</h3><div class="card-value">120</div></div>
+                    </div>
+
+                    <div class="table-container" style="margin-top: 20px;">
+                        <h3>صندوق الوارد والمحادثات</h3>
+                        <table class="modern-table">
+                            <thead><tr><th>المرسل</th><th>النوع</th><th>العنوان</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                            <tbody id="messagesTableBody"></tbody>
                         </table>
                     </div>
                 </section>
@@ -104,55 +248,12 @@
                 <form class="modern-form">
                     <div class="input-group"><label>الاسم الرباعي</label><input type="text" class="glass-input"></div>
                     <div class="input-group"><label>تاريخ الميلاد</label><input type="date" class="glass-input"></div>
-                    <div class="input-group"><label>الجنس</label>
-                        <select class="glass-input"><option>ذكر</option><option>أنثى</option></select>
-                    </div>
-                    <div class="input-group"><label>رقم الهاتف</label><input type="number" class="glass-input"></div>
-                    <div class="input-group"><label>نظام الدفع</label>
-                        <select class="glass-input"><option>شهري</option><option>أقساط</option></select>
-                    </div>
+                    <div class="input-group"><label>الجنس</label><select class="glass-input"><option>ذكر</option><option>أنثى</option></select></div>
                     <div class="form-actions">
-                        <button type="button" class="btn-primary">حفظ</button>
+                        <button type="button" class="btn-primary" onclick="closeModal('studentModal')">حفظ</button>
                         <button type="button" class="btn-secondary" onclick="closeModal('studentModal')">إلغاء</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="paymentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>تسديد دفعة</h3>
-                <button class="close-modal" onclick="closeModal('paymentModal')">✖</button>
-            </div>
-            <div class="modal-body">
-                <form class="modern-form">
-                    <div class="input-group"><label>اسم الطالب</label><input type="text" class="glass-input" value="أحمد محمود" readonly></div>
-                    <div class="input-group"><label>المبلغ المطلوب</label><input type="number" class="glass-input" value="50000" readonly></div>
-                    <div class="input-group"><label>المبلغ المدفوع</label><input type="number" class="glass-input"></div>
-                    <div class="input-group"><label>طريقة الدفع</label>
-                        <select class="glass-input"><option>نقدي</option><option>حوالة</option></select>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn-primary">حفظ التسديد</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="deleteModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="color: var(--primary-red);">تأكيد الحذف</h3>
-            </div>
-            <div class="modal-body">
-                <p>هل أنت متأكد من حذف هذا السجل نهائياً؟ لا يمكن التراجع عن هذا الإجراء.</p>
-                <div class="form-actions">
-                    <button type="button" class="btn-primary" style="background: var(--primary-red);">نعم، احذف</button>
-                    <button type="button" class="btn-secondary" onclick="closeModal('deleteModal')">إلغاء</button>
-                </div>
             </div>
         </div>
     </div>
