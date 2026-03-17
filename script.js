@@ -1,180 +1,171 @@
-// خبير البرمجة: تم كتابة الكود ليكون منظماً ومقسماً لمهام واضحة
+// خبير البرمجة: تم إعداد السكربت لتوليد التبويبات والمودالات بديناميكية وحرفية عالية
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // === 1. إدارة التنقل بين التبويبات (SPA Routing) ===
+    // === 1. إدارة التنقل بين التبويبات (SPA Routing) + GSAP Animations ===
     const navLinks = document.querySelectorAll('.nav-links li');
-    const pages = document.querySelectorAll('.page');
+    const pagesContainer = document.querySelector('.pages-container');
 
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            // إزالة التفعيل من كل الروابط والصفحات
             navLinks.forEach(l => l.classList.remove('active'));
-            pages.forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
-            // تفعيل الرابط والصفحة المطلوبة
             link.classList.add('active');
             const targetId = link.getAttribute('data-target');
-            document.getElementById(targetId).classList.add('active');
+            const targetPage = document.getElementById(targetId);
             
-            // تشغيل حركة دخول للعناصر الداخلية في الصفحة الجديدة
-            gsap.from(`#${targetId} > *`, {
-                y: 20,
-                opacity: 0,
-                duration: 0.5,
-                stagger: 0.1,
-                ease: "power2.out"
-            });
-        });
-    });
-
-    // === 2. أنيميشن GSAP لقلب الكارت (3D Flip) ===
-    // هذا ينفذ الوصف التنفيذي المعقد الذي طلبته تماماً
-    const detailsBtns = document.querySelectorAll('.btn-details');
-
-    detailsBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            // منع الحدث من التأثير على عناصر أخرى
-            e.stopPropagation(); 
-            
-            // تحديد الكارت الداخلي المرتبط بالزر
-            const cardInner = this.closest('.card-3d-inner');
-            const frontElements = cardInner.querySelectorAll('.card-front > *');
-            
-            // إنشاء Timeline احترافي من GSAP
-            const tl = gsap.timeline();
-
-            // 1. تصغير الكارت وقلبه 180 درجة (الوجه الخلفي)
-            tl.to(cardInner, {
-                scale: 0.96,
-                rotationY: 180,
-                duration: 0.6,
-                ease: "power1.inOut"
-            })
-            // 2. إكمال الدورة لـ 360 درجة مع Bounce خفيف وعمق Z
-            .to(cardInner, {
-                rotationY: 360,
-                z: 50, // عمق وهمي
-                duration: 0.8,
-                ease: "back.out(1.5)"
-            })
-            // 3. العودة للحجم الطبيعي وإزالة العمق
-            .to(cardInner, {
-                scale: 1,
-                z: 0,
-                duration: 0.3,
-                clearProps: "all" // إعادة تهيئة الخصائص ليعمل مرة أخرى
-            }, "-=0.2")
-            // 4. تفكك بسيط وعودة للعناصر الداخلية (Micro-interactions)
-            .from(frontElements, {
-                y: 10,
-                opacity: 0.5,
-                duration: 0.4,
-                stagger: 0.05,
-                ease: "back.out(2)"
-            });
-        });
-    });
-
-    // زر العودة في الوجه الخلفي (مثال إضافي)
-    const actionBtns = document.querySelectorAll('.btn-action');
-    actionBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const cardInner = this.closest('.card-3d-inner');
-            gsap.to(cardInner, { rotationY: 0, duration: 0.6, ease: "power2.out" });
-        });
-    });
-
-
-    // === 3. النوافذ المنبثقة (Modals) ===
-    const studentModal = document.getElementById('studentModal');
-    const btnAddStudent = document.getElementById('btnAddStudent');
-    const closeBtns = document.querySelectorAll('.close-modal');
-
-    btnAddStudent.addEventListener('click', () => {
-        studentModal.classList.add('active');
-    });
-
-    closeBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            studentModal.classList.remove('active');
-        });
-    });
-
-    // إغلاق النافذة عند الضغط خارجها
-    studentModal.addEventListener('click', (e) => {
-        if(e.target === studentModal) {
-            studentModal.classList.remove('active');
-        }
-    });
-
-
-    // === 4. البيانات الوهمية (Mock Data) وتعبئة الجداول ===
-    const mockStudents = [
-        { id: '1001', name: 'أحمد محمود العراقي', course: 'دورة البرمجة', status: 'فعال' },
-        { id: '1002', name: 'سارة علي حسن', course: 'اللغة الإنجليزية', status: 'فعال' },
-        { id: '1003', name: 'مصطفى كريم', course: 'دورة التصميم', status: 'قيد الانتظار' },
-        { id: '1004', name: 'زينب محمد', course: 'دورة البرمجة', status: 'فعال' }
-    ];
-
-    function renderStudentsTable() {
-        // تعبئة جدول الطلاب في تبويبة الطلاب
-        const studentsTableBody = document.getElementById('studentsTableBody');
-        // تعبئة جدول آخر التسجيلات في الرئيسية
-        const recentStudentsTable = document.getElementById('recentStudentsTable');
-        
-        let rowsHtml = '';
-        
-        mockStudents.forEach(student => {
-            const statusClass = student.status === 'فعال' ? 'status-active' : 'status-pending';
-            rowsHtml += `
-                <tr>
-                    <td>#${student.id}</td>
-                    <td><strong>${student.name}</strong></td>
-                    <td>${student.course}</td>
-                    <td><span class="status-badge ${statusClass}">${student.status}</span></td>
-                    <td>
-                        <button class="icon-btn" title="تعديل">✏️</button>
-                        <button class="icon-btn" title="عرض">👁️</button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        if(studentsTableBody) studentsTableBody.innerHTML = rowsHtml;
-        if(recentStudentsTable) recentStudentsTable.innerHTML = rowsHtml;
-    }
-
-    renderStudentsTable();
-
-    // === 5. عداد الأرقام التلقائي (Counters) ===
-    const counters = document.querySelectorAll('.card-value');
-    counters.forEach(counter => {
-        const target = +counter.getAttribute('data-target');
-        // استخدام GSAP لعمل عداد رقمي بسلاسة
-        gsap.to(counter, {
-            innerHTML: target,
-            duration: 2,
-            snap: { innerHTML: 1 },
-            ease: "power1.out",
-            onUpdate: function() {
-                // إضافة الفواصل للأرقام الكبيرة مثل 45,000
-                counter.innerHTML = Number(Math.round(counter.innerHTML)).toLocaleString('en-US');
+            if(targetPage) {
+                targetPage.classList.add('active');
+                gsap.from(targetPage.children, {
+                    y: 20, opacity: 0, duration: 0.4, stagger: 0.1, ease: "power2.out"
+                });
             }
         });
     });
 
-    // === 6. نظام البحث (فلترة بسيطة في الجدول) ===
-    const globalSearch = document.getElementById('globalSearch');
-    globalSearch.addEventListener('input', function(e) {
-        const term = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('#studentsTableBody tr');
-        
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(term) ? '' : 'none';
-        });
+    // === 2. إنشاء الهياكل الديناميكية للتبويبات المتبقية ===
+    const dynamicPages = [
+        { id: 'courses', title: 'الدورات', btnText: 'إضافة دورة', cols: ['الدورة','التخصص','البداية','النهاية','المقاعد','الإجراءات'] },
+        { id: 'subjects', title: 'المواد', btnText: 'إضافة مادة', cols: ['المادة','الرمز','المدة','الرسوم','المدرس','الإجراءات'] },
+        { id: 'employees', title: 'الموظفين', btnText: 'إضافة موظف', cols: ['الاسم','الوظيفة','الراتب','التعيين','الإجراءات'] },
+        { id: 'salaries', title: 'الرواتب', btnText: 'إضافة راتب', cols: ['الموظف','الشهر','الأساسي','الصافي','تاريخ الصرف','الإجراءات'] },
+        { id: 'installments', title: 'الأقساط والتسديد', btnText: 'إنشاء أقساط', cols: ['الطالب','المبلغ الكلي','القسط','الاستحقاق','الإجراءات'] },
+        { id: 'incomes', title: 'الواردات', btnText: 'إضافة وارد', cols: ['المصدر','النوع','المبلغ','التاريخ','المستلم','الإجراءات'] },
+        { id: 'expenses', title: 'المصروفات', btnText: 'إضافة مصروف', cols: ['النوع','المبلغ','الجهة','التاريخ','الإجراءات'] },
+        { id: 'pettycash', title: 'النثريات', btnText: 'إضافة نثرية', cols: ['السبب','المبلغ','التاريخ','الملاحظات','الإجراءات'] },
+        { id: 'reports', title: 'التقارير', btnText: 'توليد تقرير', cols: ['نوع التقرير','التاريخ','النتيجة','الإجراءات'] },
+        { id: 'statistics', title: 'الإحصائيات', btnText: 'تحديث البيانات', cols: ['الإحصائية','القيمة','النسبة','الإجراءات'] },
+        { id: 'notifications', title: 'الإشعارات', btnText: 'إضافة إشعار', cols: ['العنوان','النوع','التاريخ','الحالة','الإجراءات'] },
+        { id: 'settings', title: 'الإعدادات', btnText: 'حفظ الإعدادات', cols: ['الإعداد','القيمة','الحالة','الإجراءات'] }
+    ];
+
+    const container = document.getElementById('dynamicPagesContainer');
+    dynamicPages.forEach(page => {
+        let thHTML = page.cols.map(c => `<th>${c}</th>`).join('');
+        container.innerHTML += `
+            <section id="${page.id}" class="page">
+                <div class="page-header">
+                    <h2 class="page-title">${page.title}</h2>
+                    <button class="btn-primary" onclick="openGenericModal('${page.title}')">➕ ${page.btnText}</button>
+                </div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead><tr>${thHTML}</tr></thead>
+                        <tbody id="${page.id}TableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        `;
     });
 
+    // === 3. البيانات الوهمية (Mock Data) وتعبئة الجداول ===
+    const mockData = {
+        students: [
+            { name: 'أحمد محمود', course: 'برمجة', subject: 'JS', status: 'فعال' },
+            { name: 'سارة علي', course: 'لغات', subject: 'English', status: 'متأخر' }
+        ],
+        registration: [
+            { name: 'زينب محمد', stage: 'الابتدائية', date: '2023-10-01', status: 'انتظار' }
+        ],
+        courses: [
+            { c1: 'دورة ويب', c2: 'IT', c3: '2023-11', c4: '2024-02', c5: '25', c6: '' }
+        ],
+        employees: [
+            { c1: 'مصطفى كريم', c2: 'محاسب', c3: '600$', c4: '2022-01', c5: '' }
+        ]
+        // يمكن إضافة بيانات لبقية الجداول بنفس النمط
+    };
+
+    function generateRows(dataArray, isStandard) {
+        return dataArray.map(item => {
+            let tr = '<tr>';
+            if(isStandard) {
+                tr += `<td>${item.name}</td><td>${item.course || item.stage}</td><td>${item.subject || item.date}</td>
+                       <td><span class="status-badge ${item.status === 'فعال' ? 'status-active' : 'status-pending'}">${item.status}</span></td>`;
+            } else {
+                Object.values(item).forEach(val => tr += `<td>${val}</td>`);
+            }
+            tr += `<td>
+                    <button class="icon-btn" onclick="openGenericModal('تعديل')" title="تعديل">✏️</button>
+                    <button class="icon-btn" onclick="openModal('deleteModal')" title="حذف">🗑️</button>
+                   </td></tr>`;
+            return tr;
+        }).join('');
+    }
+
+    document.getElementById('studentsTableBody').innerHTML = generateRows(mockData.students, true);
+    document.getElementById('registrationTableBody').innerHTML = generateRows(mockData.registration, true);
+    document.getElementById('coursesTableBody').innerHTML = generateRows(mockData.courses, false);
+    document.getElementById('employeesTableBody').innerHTML = generateRows(mockData.employees, false);
+
 });
+
+// === 4. نظام إدارة النوافذ المنبثقة (Modals) الشامل ===
+window.openModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if(modal) {
+        modal.classList.add('active');
+        // أنيميشن GSAP لظهور النافذة
+        gsap.fromTo(modal.querySelector('.modal-content'), 
+            { scale: 0.8, opacity: 0 }, 
+            { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
+        );
+    }
+};
+
+window.closeModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if(modal) {
+        gsap.to(modal.querySelector('.modal-content'), {
+            scale: 0.8, opacity: 0, duration: 0.2, 
+            onComplete: () => {
+                modal.classList.remove('active');
+                gsap.set(modal.querySelector('.modal-content'), { clearProps: "all" });
+            }
+        });
+    }
+};
+
+// مولد النماذج الديناميكي (لتقليل حجم HTML وتغطية جميع متطلبات التبويبات)
+window.openGenericModal = function(actionType) {
+    document.getElementById('genericModalTitle').innerText = actionType;
+    let fieldsHTML = '';
+
+    // توليد حقول بناءً على نوع الإجراء المطلوب
+    if(actionType.includes('دورة')) {
+        fieldsHTML = `
+            <div class="input-group"><label>اسم الدورة</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>التخصص</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>تاريخ البداية</label><input type="date" class="glass-input"></div>
+            <div class="input-group"><label>تاريخ النهاية</label><input type="date" class="glass-input"></div>
+            <div class="input-group"><label>الرسوم</label><input type="number" class="glass-input"></div>
+            <div class="input-group"><label>المدرس</label><select class="glass-input"><option>أستاذ أحمد</option></select></div>
+        `;
+    } else if (actionType.includes('موظف') || actionType.includes('مادة')) {
+         fieldsHTML = `
+            <div class="input-group"><label>الاسم / العنوان</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>الوصف / الوظيفة</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>الراتب / الرسوم</label><input type="number" class="glass-input"></div>
+        `;
+    } else {
+        // حقول افتراضية عامة لأي تبويبة أخرى (المصروفات، الإيرادات، الخ)
+        fieldsHTML = `
+            <div class="input-group"><label>البيان / الاسم</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>المبلغ / القيمة</label><input type="number" class="glass-input"></div>
+            <div class="input-group"><label>التاريخ</label><input type="date" class="glass-input"></div>
+            <div class="input-group"><label>ملاحظات</label><textarea class="glass-input"></textarea></div>
+        `;
+    }
+
+    document.getElementById('genericModalBody').innerHTML = `
+        <form class="modern-form">
+            ${fieldsHTML}
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="closeModal('genericModal')">حفظ البيانات</button>
+            </div>
+        </form>
+    `;
+    
+    openModal('genericModal');
+};
