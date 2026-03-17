@@ -20,12 +20,21 @@
                 <li data-target="students">الطلاب</li>
                 <li data-target="registration">التسجيل والقبول</li>
                 <li data-target="courses">الدورات</li>
+                <li data-target="subjects">المواد</li>
+                <li data-target="employees">الموظفين</li>
+                <li data-target="salaries">الرواتب</li>
+                <li data-target="installments">الأقساط والتسديد</li>
+                <li data-target="incomes">الواردات</li>
+                <li data-target="expenses">المصروفات</li>
+                <li data-target="pettycash">النثريات</li>
+                <li data-target="reports">التقارير</li>
+                <li data-target="statistics">الإحصائيات</li>
+                <li data-target="notifications">الإشعارات</li>
                 <li data-target="settings">الإعدادات</li>
             </ul>
         </aside>
 
         <main class="main-content">
-            
             <header class="top-header">
                 <div class="search-box gradient-border-wrapper">
                     <input type="text" id="globalSearch" placeholder="ابحث في النظام...">
@@ -42,116 +51,120 @@
             <div class="pages-container">
                 
                 <section id="dashboard" class="page active">
-                    <h2 class="page-title">نظرة عامة والإحصائيات</h2>
-                    
-                    <div class="stats-grid">
-                        
-                        <div class="card-3d-wrapper gradient-border-wrapper">
-                            <div class="card-3d-inner">
-                                <div class="card-front">
-                                    <div class="card-icon">👨‍🎓</div>
-                                    <h3>عدد الطلاب</h3>
-                                    <div class="card-value" data-target="1250">0</div>
-                                    <p class="card-desc">إجمالي الطلاب المسجلين</p>
-                                    <button class="btn-details">تفاصيل</button>
-                                </div>
-                                <div class="card-back">
-                                    <h3>تفاصيل إضافية</h3>
-                                    <p>نسبة النمو: <span class="growth-up">+15% 📈</span></p>
-                                    <button class="btn-action">عرض التقرير</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-3d-wrapper gradient-border-wrapper">
-                            <div class="card-3d-inner">
-                                <div class="card-front">
-                                    <div class="card-icon">💰</div>
-                                    <h3>الوارد الشهري</h3>
-                                    <div class="card-value" data-target="45000">0</div>
-                                    <p class="card-desc">بالدينار العراقي</p>
-                                    <button class="btn-details">تفاصيل</button>
-                                </div>
-                                <div class="card-back">
-                                    <h3>تفاصيل الوارد</h3>
-                                    <p>الأقساط: 30,000</p>
-                                    <p>التسجيل: 15,000</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="quick-tables">
-                        <div class="table-container">
-                            <h3>آخر التسجيلات</h3>
-                            <table class="modern-table">
-                                <thead>
-                                    <tr>
-                                        <th>الاسم</th>
-                                        <th>الدورة</th>
-                                        <th>التاريخ</th>
-                                        <th>الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recentStudentsTable">
-                                    </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <h2 class="page-title">نظرة عامة</h2>
+                    <div class="stats-grid" id="dashboardStats"></div>
                 </section>
 
                 <section id="students" class="page">
                     <div class="page-header">
-                        <h2 class="page-title">إدارة الطلاب</h2>
-                        <button class="btn-primary gradient-border-wrapper" id="btnAddStudent">إضافة طالب جديد ➕</button>
+                        <h2 class="page-title">الطلاب</h2>
+                        <div class="header-actions">
+                            <button class="btn-primary gradient-border-wrapper" onclick="openModal('studentModal')">➕ إضافة طالب</button>
+                            <button class="btn-secondary" onclick="openModal('paymentModal')">💰 تسديد قسط</button>
+                        </div>
                     </div>
-                    
                     <div class="table-container">
                         <table class="modern-table">
                             <thead>
-                                <tr>
-                                    <th>رقم الطالب</th>
-                                    <th>الاسم الكامل</th>
-                                    <th>الدورة</th>
-                                    <th>حالة التسجيل</th>
-                                    <th>الإجراءات</th>
-                                </tr>
+                                <tr><th>الاسم</th><th>الدورة</th><th>المادة</th><th>الحالة</th><th>الإجراءات</th></tr>
                             </thead>
-                            <tbody id="studentsTableBody">
-                                </tbody>
+                            <tbody id="studentsTableBody"></tbody>
                         </table>
                     </div>
                 </section>
-                
-                </div>
+
+                <section id="registration" class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">التسجيل والقبول</h2>
+                        <button class="btn-primary" onclick="openModal('registerModal')">📝 تسجيل جديد</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="modern-table">
+                            <thead>
+                                <tr><th>الاسم</th><th>المرحلة</th><th>تاريخ التسجيل</th><th>الحالة</th><th>الإجراءات</th></tr>
+                            </thead>
+                            <tbody id="registrationTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div id="dynamicPagesContainer"></div>
+
+            </div>
         </main>
     </div>
 
     <div class="modal-overlay" id="studentModal">
         <div class="modal-content gradient-border-wrapper">
             <div class="modal-header">
-                <h3>إضافة/تعديل طالب</h3>
-                <button class="close-modal">✖</button>
+                <h3>إضافة طالب جديد</h3>
+                <button class="close-modal" onclick="closeModal('studentModal')">✖</button>
             </div>
             <div class="modal-body">
-                <form id="studentForm" class="modern-form">
-                    <div class="input-group">
-                        <label>الاسم الرباعي</label>
-                        <input type="text" class="glass-input" required>
+                <form class="modern-form">
+                    <div class="input-group"><label>الاسم الرباعي</label><input type="text" class="glass-input"></div>
+                    <div class="input-group"><label>تاريخ الميلاد</label><input type="date" class="glass-input"></div>
+                    <div class="input-group"><label>الجنس</label>
+                        <select class="glass-input"><option>ذكر</option><option>أنثى</option></select>
                     </div>
-                    <div class="input-group">
-                        <label>الدورة المحددة</label>
-                        <select class="glass-input">
-                            <option>دورة البرمجة</option>
-                            <option>دورة اللغة الإنجليزية</option>
-                        </select>
+                    <div class="input-group"><label>رقم الهاتف</label><input type="number" class="glass-input"></div>
+                    <div class="input-group"><label>نظام الدفع</label>
+                        <select class="glass-input"><option>شهري</option><option>أقساط</option></select>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary">حفظ البيانات</button>
-                        <button type="button" class="btn-secondary close-modal">إلغاء</button>
+                        <button type="button" class="btn-primary">حفظ</button>
+                        <button type="button" class="btn-secondary" onclick="closeModal('studentModal')">إلغاء</button>
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تسديد دفعة</h3>
+                <button class="close-modal" onclick="closeModal('paymentModal')">✖</button>
+            </div>
+            <div class="modal-body">
+                <form class="modern-form">
+                    <div class="input-group"><label>اسم الطالب</label><input type="text" class="glass-input" value="أحمد محمود" readonly></div>
+                    <div class="input-group"><label>المبلغ المطلوب</label><input type="number" class="glass-input" value="50000" readonly></div>
+                    <div class="input-group"><label>المبلغ المدفوع</label><input type="number" class="glass-input"></div>
+                    <div class="input-group"><label>طريقة الدفع</label>
+                        <select class="glass-input"><option>نقدي</option><option>حوالة</option></select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-primary">حفظ التسديد</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: var(--primary-red);">تأكيد الحذف</h3>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد من حذف هذا السجل نهائياً؟ لا يمكن التراجع عن هذا الإجراء.</p>
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" style="background: var(--primary-red);">نعم، احذف</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('deleteModal')">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="genericModal">
+        <div class="modal-content gradient-border-wrapper">
+            <div class="modal-header">
+                <h3 id="genericModalTitle">عنوان النافذة</h3>
+                <button class="close-modal" onclick="closeModal('genericModal')">✖</button>
+            </div>
+            <div class="modal-body" id="genericModalBody">
+                </div>
         </div>
     </div>
 
