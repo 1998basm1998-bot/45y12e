@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المعهد التعليمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">معهد <span>الريادة</span></div>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard">الرئيسية</li>
+                <li data-target="students">الطلاب</li>
+                <li data-target="registration">التسجيل والقبول</li>
+                <li data-target="courses">الدورات</li>
+                <li data-target="settings">الإعدادات</li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="search-box gradient-border-wrapper">
+                    <input type="text" id="globalSearch" placeholder="ابحث في النظام...">
+                </div>
+                <div class="user-actions">
+                    <button class="icon-btn">🔔</button>
+                    <div class="user-profile">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="المستخدم">
+                        <span>المدير العام</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="pages-container">
+                
+                <section id="dashboard" class="page active">
+                    <h2 class="page-title">نظرة عامة والإحصائيات</h2>
+                    
+                    <div class="stats-grid">
+                        
+                        <div class="card-3d-wrapper gradient-border-wrapper">
+                            <div class="card-3d-inner">
+                                <div class="card-front">
+                                    <div class="card-icon">👨‍🎓</div>
+                                    <h3>عدد الطلاب</h3>
+                                    <div class="card-value" data-target="1250">0</div>
+                                    <p class="card-desc">إجمالي الطلاب المسجلين</p>
+                                    <button class="btn-details">تفاصيل</button>
+                                </div>
+                                <div class="card-back">
+                                    <h3>تفاصيل إضافية</h3>
+                                    <p>نسبة النمو: <span class="growth-up">+15% 📈</span></p>
+                                    <button class="btn-action">عرض التقرير</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-3d-wrapper gradient-border-wrapper">
+                            <div class="card-3d-inner">
+                                <div class="card-front">
+                                    <div class="card-icon">💰</div>
+                                    <h3>الوارد الشهري</h3>
+                                    <div class="card-value" data-target="45000">0</div>
+                                    <p class="card-desc">بالدينار العراقي</p>
+                                    <button class="btn-details">تفاصيل</button>
+                                </div>
+                                <div class="card-back">
+                                    <h3>تفاصيل الوارد</h3>
+                                    <p>الأقساط: 30,000</p>
+                                    <p>التسجيل: 15,000</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="quick-tables">
+                        <div class="table-container">
+                            <h3>آخر التسجيلات</h3>
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>الاسم</th>
+                                        <th>الدورة</th>
+                                        <th>التاريخ</th>
+                                        <th>الحالة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentStudentsTable">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="students" class="page">
+                    <div class="page-header">
+                        <h2 class="page-title">إدارة الطلاب</h2>
+                        <button class="btn-primary gradient-border-wrapper" id="btnAddStudent">إضافة طالب جديد ➕</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>رقم الطالب</th>
+                                    <th>الاسم الكامل</th>
+                                    <th>الدورة</th>
+                                    <th>حالة التسجيل</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="studentModal">
+        <div class="modal-content gradient-border-wrapper">
+            <div class="modal-header">
+                <h3>إضافة/تعديل طالب</h3>
+                <button class="close-modal">✖</button>
+            </div>
+            <div class="modal-body">
+                <form id="studentForm" class="modern-form">
+                    <div class="input-group">
+                        <label>الاسم الرباعي</label>
+                        <input type="text" class="glass-input" required>
+                    </div>
+                    <div class="input-group">
+                        <label>الدورة المحددة</label>
+                        <select class="glass-input">
+                            <option>دورة البرمجة</option>
+                            <option>دورة اللغة الإنجليزية</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">حفظ البيانات</button>
+                        <button type="button" class="btn-secondary close-modal">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
