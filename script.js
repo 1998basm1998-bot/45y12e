@@ -1,11 +1,10 @@
-// خبير البرمجة: تم إعداد السكربت لتوليد التبويبات والمودالات بديناميكية وحرفية عالية
+// خبير البرمجة: تم إعداد السكربت الشامل لإدارة الـ 19 تبويبة بكل تفاصيلها وحركاتها.
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // === 1. إدارة التنقل بين التبويبات (SPA Routing) + GSAP Animations ===
+    // === 1. إدارة التنقل بين التبويبات (SPA Routing) + GSAP ===
     const navLinks = document.querySelectorAll('.nav-links li');
-    const pagesContainer = document.querySelector('.pages-container');
-
+    
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             navLinks.forEach(l => l.classList.remove('active'));
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // === 2. إنشاء الهياكل الديناميكية للتبويبات المتبقية ===
+    // === 2. إنشاء الهياكل الديناميكية للتبويبات القديمة (لتخفيف كود HTML) ===
     const dynamicPages = [
         { id: 'courses', title: 'الدورات', btnText: 'إضافة دورة', cols: ['الدورة','التخصص','البداية','النهاية','المقاعد','الإجراءات'] },
         { id: 'subjects', title: 'المواد', btnText: 'إضافة مادة', cols: ['المادة','الرمز','المدة','الرسوم','المدرس','الإجراءات'] },
@@ -47,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <section id="${page.id}" class="page">
                 <div class="page-header">
                     <h2 class="page-title">${page.title}</h2>
-                    <button class="btn-primary" onclick="openGenericModal('${page.title}')">➕ ${page.btnText}</button>
+                    <button class="btn-primary" onclick="openGenericModal('${page.btnText}')">➕ ${page.btnText}</button>
                 </div>
                 <div class="table-container">
                     <table class="modern-table">
@@ -59,54 +58,75 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     });
 
-    // === 3. البيانات الوهمية (Mock Data) وتعبئة الجداول ===
-    const mockData = {
-        students: [
-            { name: 'أحمد محمود', course: 'برمجة', subject: 'JS', status: 'فعال' },
-            { name: 'سارة علي', course: 'لغات', subject: 'English', status: 'متأخر' }
-        ],
-        registration: [
-            { name: 'زينب محمد', stage: 'الابتدائية', date: '2023-10-01', status: 'انتظار' }
-        ],
-        courses: [
-            { c1: 'دورة ويب', c2: 'IT', c3: '2023-11', c4: '2024-02', c5: '25', c6: '' }
-        ],
-        employees: [
-            { c1: 'مصطفى كريم', c2: 'محاسب', c3: '600$', c4: '2022-01', c5: '' }
-        ]
-        // يمكن إضافة بيانات لبقية الجداول بنفس النمط
-    };
+    // === 3. توليد كروت الإحصائيات 3D في الرئيسية ===
+    const dashboardStats = document.getElementById('dashboardStats');
+    if(dashboardStats) {
+        dashboardStats.innerHTML = `
+            <div class="card-3d-wrapper gradient-border-wrapper">
+                <div class="card-3d-inner"><div class="card-front"><div class="card-icon">👨‍🎓</div><h3>عدد الطلاب</h3><div class="card-value">1250</div><button class="btn-details">تفاصيل</button></div><div class="card-back"><h3>نمو مستمر</h3><p>+15% هذا الشهر</p><button class="btn-action">رجوع</button></div></div>
+            </div>
+            <div class="card-3d-wrapper gradient-border-wrapper">
+                <div class="card-3d-inner"><div class="card-front"><div class="card-icon">💰</div><h3>الوارد الشهري</h3><div class="card-value">45,000</div><button class="btn-details">تفاصيل</button></div><div class="card-back"><h3>تفاصيل</h3><p>تم تحصيل 80% من الأقساط</p><button class="btn-action">رجوع</button></div></div>
+            </div>
+        `;
 
-    function generateRows(dataArray, isStandard) {
-        return dataArray.map(item => {
-            let tr = '<tr>';
-            if(isStandard) {
-                tr += `<td>${item.name}</td><td>${item.course || item.stage}</td><td>${item.subject || item.date}</td>
-                       <td><span class="status-badge ${item.status === 'فعال' ? 'status-active' : 'status-pending'}">${item.status}</span></td>`;
-            } else {
-                Object.values(item).forEach(val => tr += `<td>${val}</td>`);
-            }
-            tr += `<td>
-                    <button class="icon-btn" onclick="openGenericModal('تعديل')" title="تعديل">✏️</button>
-                    <button class="icon-btn" onclick="openModal('deleteModal')" title="حذف">🗑️</button>
-                   </td></tr>`;
-            return tr;
-        }).join('');
+        // تفعيل حركة 3D GSAP لزر التفاصيل
+        document.querySelectorAll('.btn-details').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const cardInner = this.closest('.card-3d-inner');
+                const tl = gsap.timeline();
+                tl.to(cardInner, { scale: 0.96, rotationY: 180, duration: 0.6 })
+                  .to(cardInner, { rotationY: 360, z: 50, duration: 0.8, ease: "back.out(1.5)" })
+                  .to(cardInner, { scale: 1, z: 0, duration: 0.3, clearProps: "all" }, "-=0.2");
+            });
+        });
     }
 
-    document.getElementById('studentsTableBody').innerHTML = generateRows(mockData.students, true);
-    document.getElementById('registrationTableBody').innerHTML = generateRows(mockData.registration, true);
-    document.getElementById('coursesTableBody').innerHTML = generateRows(mockData.courses, false);
-    document.getElementById('employeesTableBody').innerHTML = generateRows(mockData.employees, false);
+    // === 4. البيانات الوهمية (Mock Data) لجميع الجداول ===
+    const mockData = {
+        students: [{ c1: 'أحمد محمود', c2: 'دورة ويب', c3: 'برمجة', c4: '<span class="status-badge status-active">فعال</span>' }],
+        registration: [{ c1: 'سارة علي', c2: 'مرحلة أولى', c3: '2023-10-15', c4: '<span class="status-badge status-pending">انتظار</span>' }],
+        attendance: [{ c1: 'أحمد محمود', c2: 'طالب', c3: 'دورة ويب', c4: '08:30 AM', c5: '<span class="status-badge status-active">حاضر</span>' }],
+        exams: [{ c1: 'مصطفى كريم', c2: 'برمجة', c3: 'الشهر الأول', c4: '95', c5: 'امتياز' }],
+        schedule: [{ c1: 'الأحد', c2: '10:00 - 12:00', c3: 'رياضيات', c4: 'أ. علي', c5: 'القاعة A' }],
+        library: [{ c1: 'ملزمة الفيزياء', c2: 'فيزياء', c3: 'PDF', c4: '2MB', c5: '2023-11-01' }],
+        messages: [{ c1: 'ولي أمر (سارة)', c2: 'استفسار', c3: 'موعد الامتحان', c4: 'اليوم', c5: '<span class="status-badge status-pending">غير مقروء</span>' }]
+    };
+
+    function populateTable(tbodyId, dataArray) {
+        const tbody = document.getElementById(tbodyId);
+        if(!tbody || !dataArray) return;
+        
+        let html = '';
+        dataArray.forEach(row => {
+            html += '<tr>';
+            Object.values(row).forEach(val => html += `<td>${val}</td>`);
+            html += `<td>
+                        <button class="icon-btn" onclick="openGenericModal('عرض التفاصيل')" title="عرض">👁️</button>
+                        <button class="icon-btn" onclick="openGenericModal('تعديل البيانات')" title="تعديل">✏️</button>
+                        <button class="icon-btn" title="حذف">🗑️</button>
+                     </td></tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    // تعبئة الجداول
+    populateTable('studentsTableBody', mockData.students);
+    populateTable('registrationTableBody', mockData.registration);
+    populateTable('attendanceTableBody', mockData.attendance);
+    populateTable('examsTableBody', mockData.exams);
+    populateTable('scheduleTableBody', mockData.schedule);
+    populateTable('libraryTableBody', mockData.library);
+    populateTable('messagesTableBody', mockData.messages);
 
 });
 
-// === 4. نظام إدارة النوافذ المنبثقة (Modals) الشامل ===
+// === 5. نظام إدارة النوافذ المنبثقة (Modals) الشامل والديناميكي ===
 window.openModal = function(modalId) {
     const modal = document.getElementById(modalId);
     if(modal) {
         modal.classList.add('active');
-        // أنيميشن GSAP لظهور النافذة
         gsap.fromTo(modal.querySelector('.modal-content'), 
             { scale: 0.8, opacity: 0 }, 
             { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
@@ -119,40 +139,51 @@ window.closeModal = function(modalId) {
     if(modal) {
         gsap.to(modal.querySelector('.modal-content'), {
             scale: 0.8, opacity: 0, duration: 0.2, 
-            onComplete: () => {
-                modal.classList.remove('active');
-                gsap.set(modal.querySelector('.modal-content'), { clearProps: "all" });
-            }
+            onComplete: () => { modal.classList.remove('active'); }
         });
     }
 };
 
-// مولد النماذج الديناميكي (لتقليل حجم HTML وتغطية جميع متطلبات التبويبات)
+// مولد النماذج الديناميكي لحقول الـ 5 تبويبات الجديدة وبقية النظام
 window.openGenericModal = function(actionType) {
     document.getElementById('genericModalTitle').innerText = actionType;
     let fieldsHTML = '';
 
-    // توليد حقول بناءً على نوع الإجراء المطلوب
-    if(actionType.includes('دورة')) {
+    // توليد حقول مخصصة بناءً على اسم الزر/الإجراء لتلبية متطلباتك
+    if(actionType.includes('حضور الطلاب')) {
         fieldsHTML = `
-            <div class="input-group"><label>اسم الدورة</label><input type="text" class="glass-input"></div>
-            <div class="input-group"><label>التخصص</label><input type="text" class="glass-input"></div>
-            <div class="input-group"><label>تاريخ البداية</label><input type="date" class="glass-input"></div>
-            <div class="input-group"><label>تاريخ النهاية</label><input type="date" class="glass-input"></div>
-            <div class="input-group"><label>الرسوم</label><input type="number" class="glass-input"></div>
-            <div class="input-group"><label>المدرس</label><select class="glass-input"><option>أستاذ أحمد</option></select></div>
+            <div class="input-group"><label>اسم الطالب</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>الدورة/المادة</label><select class="glass-input"><option>دورة ويب</option></select></div>
+            <div class="input-group"><label>حالة الحضور</label><select class="glass-input"><option>حاضر</option><option>غائب</option><option>متأخر</option></select></div>
         `;
-    } else if (actionType.includes('موظف') || actionType.includes('مادة')) {
-         fieldsHTML = `
-            <div class="input-group"><label>الاسم / العنوان</label><input type="text" class="glass-input"></div>
-            <div class="input-group"><label>الوصف / الوظيفة</label><input type="text" class="glass-input"></div>
-            <div class="input-group"><label>الراتب / الرسوم</label><input type="number" class="glass-input"></div>
+    } else if(actionType.includes('امتحان') || actionType.includes('درجات')) {
+        fieldsHTML = `
+            <div class="input-group"><label>اسم الامتحان / الطالب</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>المادة</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>الدرجة الكلية / الممنوحة</label><input type="number" class="glass-input"></div>
+        `;
+    } else if(actionType.includes('جدول') || actionType.includes('قاعات')) {
+        fieldsHTML = `
+            <div class="input-group"><label>اليوم</label><select class="glass-input"><option>الأحد</option><option>الاثنين</option></select></div>
+            <div class="input-group"><label>وقت البداية</label><input type="time" class="glass-input"></div>
+            <div class="input-group"><label>القاعة</label><select class="glass-input"><option>القاعة A</option></select></div>
+        `;
+    } else if(actionType.includes('رفع ملف')) {
+        fieldsHTML = `
+            <div class="input-group"><label>اسم الملف</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>المادة</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>اختيار الملف</label><input type="file" class="glass-input"></div>
+        `;
+    } else if(actionType.includes('رسالة')) {
+        fieldsHTML = `
+            <div class="input-group"><label>المرسل إليه / الفئة</label><select class="glass-input"><option>الطلاب</option><option>أولياء الأمور</option></select></div>
+            <div class="input-group"><label>العنوان</label><input type="text" class="glass-input"></div>
+            <div class="input-group"><label>محتوى الرسالة</label><textarea class="glass-input" rows="4"></textarea></div>
         `;
     } else {
-        // حقول افتراضية عامة لأي تبويبة أخرى (المصروفات، الإيرادات، الخ)
+        // حقول عامة افتراضية
         fieldsHTML = `
             <div class="input-group"><label>البيان / الاسم</label><input type="text" class="glass-input"></div>
-            <div class="input-group"><label>المبلغ / القيمة</label><input type="number" class="glass-input"></div>
             <div class="input-group"><label>التاريخ</label><input type="date" class="glass-input"></div>
             <div class="input-group"><label>ملاحظات</label><textarea class="glass-input"></textarea></div>
         `;
